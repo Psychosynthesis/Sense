@@ -26,14 +26,8 @@
 > (`UseLiteEmbedder`, `UseSentencePieceTokenizer`, `UseQnAEmbedder`) они относятся
 > именно к семейству моделей Google USE и сохранены намеренно.
 
-
-```bash
-npm install @communic/sense @tensorflow/tfjs @huggingface/transformers
-
-```
-
 Область применимости намеренно ограничена **моделями текстовых эмбеддингов**.
-Это не попытка поддержать «любой transformer вообще».
+Это не попытка поддержать «любой transformer вообще», это расширение USE на модели для других языков.
 
 ## Поддерживаемые модели
 

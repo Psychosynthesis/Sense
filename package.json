@@ -1,6 +1,6 @@
 {
   "name": "@communic/sense",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Sense — universal text embedding library for TensorFlow.js (USE lite + multilingual transformers)",
   "author": "Nick G.",
   "license": "MIT",

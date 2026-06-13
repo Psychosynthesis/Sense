@@ -48,16 +48,17 @@ export class UseLiteEmbedder implements TextEmbedder {
    *
    * @param inputs A string or an array of strings to embed.
    */
-  async embed(inputs: string[]|string): Promise<tf.Tensor2D> {
+  async embed(inputs: string[] | string): Promise<tf.Tensor2D> {
     const texts = typeof inputs === 'string' ? [inputs] : inputs;
+    const { indices, values } = await this.inputAdapter.encodeBatch(texts);
 
-    const {indices, values} = await this.inputAdapter.encodeBatch(texts);
-
-    const embeddings = await this.runtime.executeAsync({indices, values});
-    indices.dispose();
-    values.dispose();
-
-    return embeddings as tf.Tensor2D;
+    try {
+      const embeddings = await this.runtime.executeAsync({ indices, values });
+      return embeddings as tf.Tensor2D;
+    } finally {
+      indices.dispose();
+      values.dispose();
+    }
   }
 
   dispose(): void {

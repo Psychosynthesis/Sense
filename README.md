@@ -1,6 +1,8 @@
 # Sense
-**Universal text embedding library for TensorFlow.js and Transformers.js models**
+
 [![npm version](https://img.shields.io/npm/v/@communic/sense?color=%00cc66)](https://www.npmjs.org/package/@communic/sense)
+
+**Universal text embedding library for TensorFlow.js and Transformers.js models** \
 
 ---
 

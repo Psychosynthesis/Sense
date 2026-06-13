@@ -1,6 +1,6 @@
 {
   "name": "@communic/sense",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Sense — universal text embedding library for TensorFlow.js (USE lite + multilingual transformers)",
   "author": "Nick G.",
   "license": "MIT",
@@ -9,6 +9,13 @@
   "unpkg": "dist/sense.min.js",
   "jsdelivr": "dist/sense.min.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/sense.esm.js",
+      "require": "./dist/sense.js"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Psychosynthesis/Sense.git"
@@ -19,13 +26,16 @@
   },
   "peerDependencies": {
     "@tensorflow/tfjs-converter": "^4.22.0",
-    "@tensorflow/tfjs-core": "^4.22.0"
+    "@tensorflow/tfjs-core": "^4.22.0",
+    "@huggingface/transformers": "^3.8.1"
+  },
+  "peerDependenciesMeta": {
+    "@huggingface/transformers": {
+      "optional": true
+    }
   },
   "dependencies": {
     "tslib": "^2.8.1"
-  },
-  "optionalDependencies": {
-    "@huggingface/transformers": "^3.8.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.3",

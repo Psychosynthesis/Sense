@@ -66,6 +66,17 @@ function githubVocabUrl(id: ModelId): string {
   return `${GITHUB_RAW_BASE}/${id}/vocab.json`;
 }
 
+function assertCustomTfjsUrls(config: LoadConfig): asserts config is LoadConfig & {
+  modelUrl: string;
+  vocabUrl: string;
+} {
+  if (config.modelUrl == null || config.vocabUrl == null) {
+    throw new Error(
+      'weightsSource="custom" requires both modelUrl and vocabUrl for tfjs-graph models.'
+    );
+  }
+}
+
 /**
  * Resolves the effective `ModelProfile` for a given `LoadConfig`, filling in
  * the concrete weight locations according to the requested `weightsSource`
@@ -100,13 +111,15 @@ function resolveTfjsModelUrl(
     return config.modelUrl;
   }
   switch (source) {
-    case 'tfhub':
-      return id === 'use-qna' ? TFHUB_USE_QNA : TFHUB_USE_LITE;
-    case 'github':
-    case 'custom':
-      return githubModelUrl(id);
-    default:
-      return githubModelUrl(id);
+      case 'tfhub':
+          return id === 'use-qna' ? TFHUB_USE_QNA : TFHUB_USE_LITE;
+      case 'github':
+          return githubModelUrl(id);
+      case 'custom':
+          assertCustomTfjsUrls(config);
+          return config.modelUrl;
+      default:
+          return githubModelUrl(id);
   }
 }
 
@@ -117,12 +130,12 @@ function resolveTfjsVocabUrl(
   }
   switch (source) {
     case 'tfhub':
-      return id === 'use-qna' ?
-          `${TFHUB_USE_QNA}/vocab.json?tfjs-format=file` :
-          TFHUB_USE_LITE_VOCAB;
+      return id === 'use-qna' ? `${TFHUB_USE_QNA}/vocab.json?tfjs-format=file` : TFHUB_USE_LITE_VOCAB;
     case 'github':
-    case 'custom':
       return githubVocabUrl(id);
+    case 'custom':
+      assertCustomTfjsUrls(config);
+      return config.vocabUrl;
     default:
       return githubVocabUrl(id);
   }

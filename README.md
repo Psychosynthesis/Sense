@@ -113,7 +113,7 @@ export interface TokenizerAdapter<TEncoding> {
 ## Установка
 
 ```bash
-npm install sense @tensorflow/tfjs @huggingface/transformers
+npm install @communic/sense @tensorflow/tfjs @huggingface/transformers
 ```
 
 `@huggingface/transformers` — **опциональная** зависимость. Она нужна только
@@ -185,7 +185,7 @@ interface LoadConfig {
 ### Использование старых USE-весов с tfhub.dev
 
 ```js
-const model = await sense.load({weightsSource: 'tfhub'});
+const model = await sense.load({ weightsSource: 'tfhub' });
 ```
 
 ### Токенизатор USE отдельно

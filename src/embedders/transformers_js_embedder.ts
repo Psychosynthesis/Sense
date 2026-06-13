@@ -83,6 +83,13 @@ export class TransformersJsEmbedder implements TextEmbedder {
     });
 
     const vectors = result.tolist();
+
+    if (!Array.isArray(vectors) || vectors.some(v => v.length !== this.embeddingDim)) {
+      throw new Error(
+        `Unexpected embedding shape for ${this.id}; expected [N, ${this.embeddingDim}].`
+      );
+    }
+
     return tf.tensor2d(vectors, [vectors.length, this.embeddingDim], 'float32');
   }
 

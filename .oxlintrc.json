@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": [ "dist", "node_modules", "models" ],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "rules": {
+    "typescript/no-explicit-any": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "eqeqeq": [ "error", "smart" ],
+    "unicorn/no-array-reverse": "off",
+    "unicorn/no-array-sort": "off"
+  }
+}

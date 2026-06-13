@@ -1,0 +1,52 @@
+{
+  "name": "@communic/sense",
+  "version": "1.0.0",
+  "description": "Sense — universal text embedding library for TensorFlow.js (USE lite + multilingual transformers)",
+  "author": "Nick G.",
+  "license": "MIT",
+  "main": "dist/sense.js",
+  "module": "dist/sense.esm.js",
+  "unpkg": "dist/sense.min.js",
+  "jsdelivr": "dist/sense.min.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Psychosynthesis/Sense.git"
+  },
+  "homepage": "https://github.com/Psychosynthesis/Sense#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@tensorflow/tfjs-converter": "^4.22.0",
+    "@tensorflow/tfjs-core": "^4.22.0"
+  },
+  "dependencies": {
+    "tslib": "^2.8.1"
+  },
+  "optionalDependencies": {
+    "@huggingface/transformers": "^3.8.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-replace": "^6.0.3",
+    "@rollup/plugin-terser": "^1.0.0",
+    "@rollup/plugin-typescript": "^12.3.0",
+    "@tensorflow/tfjs-backend-cpu": "^4.22.0",
+    "@tensorflow/tfjs-converter": "^4.22.0",
+    "@tensorflow/tfjs-core": "^4.22.0",
+    "@types/jasmine": "^3.10.19",
+    "jasmine": "^3.3.1",
+    "jasmine-core": "^3.3.0",
+    "oxlint": "^1.69.0",
+    "rimraf": "^6.1.3",
+    "rollup": "^4.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "build": "rimraf dist && tsc && rollup -c",
+    "test": "ts-node --skip-ignore --project tsconfig.test.json run_tests.ts",
+    "lint": "oxlint"
+  }
+}

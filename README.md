@@ -262,7 +262,6 @@ npm run lint  # oxlint
 ```
 
 ## Структура проекта
-
 - `src/`
   - `index.ts` — публичный API (`load`, `loadQnA`, `loadTokenizer`, типы).
   - `types.ts` — `TextEmbedder`, `ModelProfile`, `ModelId`, `LoadConfig`,
@@ -292,3 +291,22 @@ npm run lint  # oxlint
 
 **Backend / Runtime (бэкенд)** — в данном проекте слово «бэкенд» имеет два смысла, и их полезно различать. Первый — это runtime модели, поле ModelProfile.runtime, которое говорит, чем исполняется модель: tfjs-graph (это TensorFlow.js GraphModel, путь USE — обёрнут в TfjsGraphRuntime) или transformers-js (ONNX-пайплайн @huggingface/transformers, путь мультиязычной модели). Фабрика createEmbedder() по этому полю выбирает, какой эмбеддер собрать. Именно это чаще всего имеется в виду под «эмбеддинг-бэкендом» (на каком движке/модели получены эмбеддинги).
 Второй смысл — это вычислительный backend самого TensorFlow.js: cpu, tensorflow (через @tensorflow/tfjs-node), webgl и т.д. Он определяет, на чём физически считаются тензорные операции (CPU/GPU). В тестах, например, явно ставится CPU-бэкенд (tf.setBackend('cpu')). Этот низкоуровневый backend ортогонален к runtime из профиля: он влияет на скорость вычислений, но не на то, какая модель и каким способом строит эмбеддинги.
+
+
+## Примеры
+ - [Categorizer](https://github.com/Psychosynthesis/Categorizer): пример кода обучающего небольшую нейросеть-категоризатор
+
+## Какие зависимости нужны в проектах-потребителях
+  `@tensorflow/tfjs-node` — нужен везде. Он закрывает сразу три вещи:
+
+  >Peer-зависимости Sense. Библиотека объявляет peer-deps @tensorflow/tfjs-core и @tensorflow/tfjs-converter (через converter грузится USE GraphModel). @tensorflow/tfjs-node тянет за собой полный @tensorflow/tfjs (core + converter + layers + …), поэтому оба peer-deps удовлетворяются транзитивно — отдельно ставить tfjs-core/tfjs-converter не обязательно (хотя можно, чтобы убрать возможные peerDep-варнинги npm).
+
+  >file://-загрузчик. Ты грузишь голову через tf.loadLayersModel('file://...'). IO-обработчик схемы file:// в Node предоставляет именно @tensorflow/tfjs-node; у чистого @tensorflow/tfjs его нет. Без tfjs-node загрузка головы с диска не заработает.
+
+  >Нативный backend — быстрые вычисления predict/concat/tensor2d на CPU.
+
+ **Важно**: версия `tfjs-node` должна попадать в диапазон peer-deps Sense (^4.22.0), иначе будет дубликат tfjs-core и конфликт реестров бэкендов.
+
+`@huggingface/transformers` — по ситуации. Эта зависимость нужна только для рантайма `transformers-js`, то есть когда `loadModel({ model })` получает `paraphrase-multilingual-minilm`. Импорт её в библиотеке ленивый: для моделей `use-lite/use-qna` (рантайм `tfjs-graph`) она вообще не подгружается, и ставить её не надо. Если же голова обучалась на мультиязычной модели — она обязательна (вместе с ней подтянется onnxruntime-node), иначе при `embedder.embed()` будет явная ошибка вида `«requires the optional dependency @huggingface/transformers»`.
+
+**Нюанс про установку**: в **Sense** `@huggingface/transformers` указан как `optionalDependencies`, а такие зависимости npm по умолчанию ставит автоматически. То есть после обычного `npm install @communic/sense` она, скорее всего, уже окажется в `node_modules` сама — отдельно ставить не придётся. Явно поставить её нужно, только если (а) модель мультиязычная и (б) установка была с `--omit=optional` или установка optional-зависимости упала (например, не собрался `onnxruntime` под платформу). И наоборот: если у тебя голова только на USE и ты хочешь не тащить тяжёлый `onnxruntime`, ставь зависимости с `--omit=optional`.
